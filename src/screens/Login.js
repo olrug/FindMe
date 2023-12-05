@@ -1,10 +1,36 @@
-import React from "react";
+import React, { useState } from 'react';
 import {Text, View, Image, TextInput} from 'react-native';
 import Icon from '@expo/vector-icons/AntDesign';
+import { createDatabase, checkUser, checkExistanceDB } from '../database/DBManagement';
+import {Configuration} from '../values/configuration'
 
 export default function Login({navigation}) {
-    const loadScene = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleEmailChange = (text) => {
+        setEmail(text);
+    };
+
+    const handlePasswordChange = (text) => {
+        setPassword(text);
+    };
+
+    const handleSubmit = () => {
+        
+        checkUser(Configuration.dbName, email, password, result => {
+            //console.log(result);
+            if(result) loadMain()
+            else console.log("Не пускаю!");
+        });
+    };
+
+    const loadRegister = () => {
         navigation.navigate('Register')
+    }
+
+    const loadMain = () => {
+        navigation.navigate('Main')
     }
 
     return(
@@ -16,14 +42,12 @@ export default function Login({navigation}) {
             <Text
                 style={{
                     fontSize: 30,
-                    fontFamily: "SemiBold",
                     alignSelf: "center",
                 }}
             >Авторизация</Text>
     
             <Text
             style={{
-                //fontFamily:"SemiBold",
                 marginHorizontal: 55,
                 textAlign: 'center',
                 marginTop: 5,
@@ -44,6 +68,8 @@ export default function Login({navigation}) {
             }}>
                 <Icon name="mail" color="#880000" size={24}/>
                 <TextInput
+                    value={email}
+                    onChangeText={handleEmailChange}
                     placeholder="Email"
                     style={{paddingHorizontal: 10}}
                 />
@@ -62,6 +88,8 @@ export default function Login({navigation}) {
             }}>
                 <Icon name="lock" color="#880000" size={24}/>
                 <TextInput
+                    value={password}
+                    onChangeText={handlePasswordChange}
                     placeholder="Password"
                     secureTextEntry
                     style={{paddingHorizontal: 10}}
@@ -76,21 +104,22 @@ export default function Login({navigation}) {
                 backgroundColor: '#880000',
                 paddingVertical: 10,
                 borderRadius: 23
-            }}>
+            }}
+            >
                 <Text style={{
-                    color: "white",
-                    fontFamily: "SemiBold"
-                }}>Войти</Text>
+                    color: 'white',
+                }}
+                onPress={handleSubmit}
+                >Войти</Text>
             </View>
             
             <Text
     
-            onPress={loadScene}
+            onPress={loadRegister}
     
             style={{
                 alignSelf: "center",
-                color: "556B2F",
-                fontFamily: "SemiBold",
+                color: 'black',
                 paddingVertical: 30
             }}>Зарегестрироваться</Text>
     

@@ -1,8 +1,29 @@
-import React from "react";
+import React, { useState } from 'react';
 import {Text, View, Image, TextInput} from 'react-native';
+import { createDatabase, insertUser, checkExistanceDB } from '../database/DBManagement';
+import {Configuration} from '../values/configuration'
 
 export default function Register({navigation}) {
         
+        const [email, setEmail] = useState('');
+        const [password, setPassword] = useState('');
+
+        const handleEmailChange = (text) => {
+            setEmail(text);
+        };
+
+        const handlePasswordChange = (text) => {
+            setPassword(text);
+        };
+
+        const handleSubmit = () => {
+            // Обработка email и password
+
+            insertUser(Configuration.dbName ,email,password)
+            console.log("Данные успешно внесены! Заходи.")
+            loadScene();
+        };
+
         const loadScene = () => {
             navigation.navigate('Login')
         }
@@ -16,14 +37,12 @@ export default function Register({navigation}) {
                 <Text
                     style={{
                         fontSize: 30,
-                        //fontFamily: "SemiBold",
                         alignSelf: "center",
                     }}
                 >Регистрация</Text>
 
                 <Text
                 style={{
-                    //fontFamily:"SemiBold",
                     marginHorizontal: 55,
                     textAlign: 'center',
                     marginTop: 5,
@@ -44,6 +63,8 @@ export default function Register({navigation}) {
                 }}>
                     
                     <TextInput
+                        value={email}
+                        onChangeText={handleEmailChange}
                         placeholder="Email"
                         placeholderTextColor="#55682F"
                         style={{paddingHorizontal: 10}}
@@ -63,6 +84,8 @@ export default function Register({navigation}) {
                 }}>
                     
                     <TextInput
+                        value={password}
+                        onChangeText={handlePasswordChange}
                         secureTextEntry
                         placeholder="Пароль"
                         placeholderTextColor="#55682F"
@@ -98,15 +121,13 @@ export default function Register({navigation}) {
                     backgroundColor: "#556B2F",
                     borderRadius: 23,
                     paddingVertical: 10
-                }}>
+                }}
+                >
                     
                     <Text 
-
-                    onPress={loadScene}
+                    onPress={handleSubmit}
 
                     style={{
-                        color: 'white',
-                        //font да да, попозже
                     }}>Регистрация</Text>
                     
                 </View>
